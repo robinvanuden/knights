@@ -4,23 +4,24 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 10f;
-    private Vector2 movement;
-    private Rigidbody2D rb;
+    private readonly float _gravity = -0.981f;
+    public float speed = 5f;
+    private Vector2 _movement;
+    private Rigidbody2D _rb;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnMovement(InputValue value)
     {
-        movement = value.Get<Vector2>();
+        _movement = value.Get<Vector2>();
     }
     
     private void FixedUpdate()
     {
         // rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);
-        rb.linearVelocity = new Vector2(movement.x * speed, movement.y);
+        _rb.linearVelocity = new Vector2(_movement.x * speed, _movement.y + _gravity);
     }
 }

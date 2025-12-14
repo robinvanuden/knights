@@ -49,9 +49,9 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnInteract(InputValue value) {
         Debug.Log("Interact!");
-        var someTilemap = GameObject.Find("Fog")?.GetComponent<Tilemap>();
-        if (someTilemap) {
-            someTilemap.ClearAllTiles();
+        var fog = GameObject.Find("Fog")?.GetComponent<Tilemap>();
+        if (fog) {
+            fog.GetComponent<FogController>()?.ClearFog();
         }
         
     }

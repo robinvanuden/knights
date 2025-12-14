@@ -78,4 +78,48 @@ public class FogController : MonoBehaviour {
     private void SetAlpha(float a) {
         _tilemap.color = new Color(_tilemap.color.r, _tilemap.color.g, _tilemap.color.b, a);
     }
+
+    /// <summary>
+    /// Fades the tilemap alpha to 0, then removes the tilemap GameObject.
+    /// </summary>
+    /// <param name="duration">Time in seconds to fade from current alpha to 0.</param>
+    public void AnimateClear(float duration = 0.5f) {
+        if (_tilemap == null) return;
+
+        // Stop the ping-pong animation first
+        Stop();
+
+        // Ensure a reasonable duration
+        var fadeDuration = Mathf.Max(0.0001f, duration);
+        StartCoroutine(FadeOutAndRemove(fadeDuration));
+    }
+
+    private IEnumerator FadeOutAndRemove(float duration) {
+        if (_tilemap == null) yield break;
+
+        var startColor = _tilemap.color;
+        var startA = startColor.a;
+        var t = 0f;
+
+        while (t < 1f && _tilemap) {
+            var dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            t += dt / duration;
+            var eased = t * t * (3f - 2f * t); // smoothstep
+            var a = Mathf.Lerp(startA, 0f, Mathf.Clamp01(eased));
+            SetAlpha(a);
+            yield return null;
+        }
+
+        if (!_tilemap) yield break;
+        SetAlpha(0f);
+        // Remove the tilemap GameObject at the end of the fade
+        var go = _tilemap.gameObject;
+        _tilemap = null;
+        if (go) Destroy(go);
+    }
+
+    public void ClearFog() {
+        Stop();
+        AnimateClear(2f);
+    }
 }

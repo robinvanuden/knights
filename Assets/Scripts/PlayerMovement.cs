@@ -31,13 +31,21 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnMovement(InputValue value) {
         // Free movement
-        _movement = value.Get<Vector2>();
-        // TODO: Finish 1-directional movement
-        // var movement = value.Get<Vector2>();
-        // if (movement.x != 0) {
-        //     _movement.x = movement.x;
-        // } else {
-        //     _movement.y = movement.y;
-        // }
+        // _movement = value.Get<Vector2>();
+        
+        // 1-directional movement (no diagonals): prefer the axis with the larger magnitude.
+        var movement = value.Get<Vector2>();
+        // If both inputs are near zero, stop completely
+        if (Mathf.Approximately(movement.x, 0f) && Mathf.Approximately(movement.y, 0f)) {
+            _movement = Vector2.zero;
+            return;
+        }
+
+        // Choose dominant axis to avoid diagonal movement
+        if (Mathf.Abs(movement.x) > Mathf.Abs(movement.y)) {
+            _movement = new Vector2(Mathf.Sign(movement.x), 0f);
+        } else {
+            _movement = new Vector2(0f, Mathf.Sign(movement.y));
+        }
     }
 }

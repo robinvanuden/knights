@@ -1,6 +1,6 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour {
     private static readonly int MoveX = Animator.StringToHash("X");
@@ -17,8 +17,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        // _rb.MovePosition(_rb.position + _movement * Time.fixedDeltaTime);
-        // _rb.linearVelocity = new Vector2(_movement.x * speed, _movement.y * speed);
         _rb.linearVelocity = _movement * speed;
         if (_movement is { x: 0, y: 0 }) {
             _animator.SetBool(IsWalking, false);
@@ -30,7 +28,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void OnMovement(InputValue value) {
-        // Free movement
+        // TODO: Decide to remove or add free movement
         // _movement = value.Get<Vector2>();
         
         // 1-directional movement (no diagonals): prefer the axis with the larger magnitude.
@@ -47,5 +45,14 @@ public class PlayerMovement : MonoBehaviour {
         } else {
             _movement = new Vector2(0f, Mathf.Sign(movement.y));
         }
+    }
+
+    private void OnInteract(InputValue value) {
+        Debug.Log("Interact!");
+        var someTilemap = GameObject.Find("Fog")?.GetComponent<Tilemap>();
+        if (someTilemap) {
+            someTilemap.ClearAllTiles();
+        }
+        
     }
 }

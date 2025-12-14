@@ -30,6 +30,14 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void OnMovement(InputValue value) {
+        // Free movement
         _movement = value.Get<Vector2>();
+        // TODO: Finish 1-directional movement
+        // var movement = value.Get<Vector2>();
+        // if (movement.x != 0) {
+        //     _movement.x = movement.x;
+        // } else {
+        //     _movement.y = movement.y;
+        // }
     }
 }
